@@ -85,4 +85,13 @@ cra_cdfi <- left_join(ungroup(cra_cdfi), filledcoords, by = c("City", "State")) 
 # export
 write.csv(cra_cdfi, "cra_cdfi.csv")
 
+# fill in coords for cra-only file as well
+crasampledd <- left_join(crasampledd, filledcoords, by = c("City", "State")) %>%
+  mutate(LAT = ifelse(is.na(LAT), Latitude, LAT),
+         LON = ifelse(is.na(LON), Longitude, LON)) %>%
+  select(-Latitude, -Longitude, -city, -state)
+
+# export
+write.csv(crasampledd, "cra_coordfill.csv")
+  
 runApp("int_map")
